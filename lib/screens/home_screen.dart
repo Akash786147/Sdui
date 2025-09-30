@@ -4,6 +4,11 @@ import 'package:gaming_hub/widgets/header_section.dart';
 import 'package:gaming_hub/widgets/game_card.dart';
 import 'package:gaming_hub/widgets/category_card.dart';
 import 'package:gaming_hub/widgets/top_rated_item.dart';
+import 'package:gaming_hub/widgets/quick_actions_section.dart';
+import 'package:gaming_hub/widgets/live_events_section.dart';
+import 'package:gaming_hub/widgets/friends_activity_section.dart';
+import 'package:gaming_hub/widgets/deals_section.dart';
+import 'package:gaming_hub/widgets/news_section.dart';
 
 /// Home screen that renders UI based on server-driven configuration
 class HomeScreen extends StatefulWidget {
@@ -24,7 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     _loadScreenConfig();
   }
-  
+
   @override
   void dispose() {
     _sduiService.dispose();
@@ -39,7 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
       });
 
       final config = await _sduiService.fetchHomeScreen();
-      
+
       setState(() {
         _screenConfig = config;
         _isLoading = false;
@@ -54,63 +59,91 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Show loading state
     if (_isLoading) {
-      return Scaffold(
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const CircularProgressIndicator(
-                color: Color(0xFF1a1a2e),
-              ),
-              const SizedBox(height: 16),
-              Text(
-                'Loading gaming experience...',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.grey[600],
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
+      return _buildLoadingState();
     }
 
+    // Show error state
     if (_error != null) {
-      return Scaffold(
-        body: Center(
+      return _buildErrorState();
+    }
+
+    // Main content
+    return Scaffold(
+      body: RefreshIndicator(
+        onRefresh: _handleRefresh,
+        color: const Color(0xFF1a1a2e),
+        child: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: _buildSections(),
+              ),
+            ),
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _handleRefresh,
+        backgroundColor: const Color(0xFF1a1a2e),
+        tooltip: 'Refresh',
+        child: const Icon(Icons.refresh, color: Colors.white),
+      ),
+    );
+  }
+
+  /// Builds the loading state widget
+  Widget _buildLoadingState() {
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const CircularProgressIndicator(color: Color(0xFF1a1a2e)),
+            const SizedBox(height: 16),
+            Text(
+              'Loading gaming experience...',
+              style: const TextStyle(fontSize: 16, color: Colors.grey),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Builds the error state widget
+  Widget _buildErrorState() {
+    return Scaffold(
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(
-                Icons.error_outline,
-                size: 64,
-                color: Colors.red,
-              ),
+              const Icon(Icons.error_outline, size: 64, color: Colors.red),
               const SizedBox(height: 16),
-              Text(
-                'Failed to load',
+              const Text(
+                'Failed to load content',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  color: Colors.grey[800],
+                  color: Color(0xFF1a1a2e),
                 ),
+                textAlign: TextAlign.center,
               ),
               const SizedBox(height: 8),
               Text(
-                _error!,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey[600],
-                ),
+                _error ?? 'An unknown error occurred',
+                style: const TextStyle(fontSize: 14, color: Colors.grey),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 24),
               ElevatedButton.icon(
                 onPressed: _loadScreenConfig,
                 icon: const Icon(Icons.refresh),
-                label: const Text('Retry'),
+                label: const Text('Try Again'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF1a1a2e),
                   foregroundColor: Colors.white,
@@ -123,23 +156,40 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ),
-      );
-    }
-
-    return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
-      body: RefreshIndicator(
-        onRefresh: _loadScreenConfig,
-        color: const Color(0xFF1a1a2e),
-        child: SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: _buildSections(),
-          ),
-        ),
       ),
     );
+  }
+
+  /// Handles the pull-to-refresh action
+  Future<void> _handleRefresh() async {
+    try {
+      await _loadScreenConfig();
+
+      if (mounted) {
+        // Only show success message if there's no error
+        if (_error == null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Content refreshed!'),
+              duration: Duration(seconds: 2),
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      debugPrint('Error during refresh: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to refresh: ${e.toString()}'),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 3),
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    }
   }
 
   List<Widget> _buildSections() {
@@ -150,10 +200,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
     for (var section in sections) {
       final type = section['type'] as String;
-      
+
       switch (type) {
         case 'header':
           widgets.add(_buildHeader(section));
+          break;
+        case 'quickActions':
+          widgets.add(_buildQuickActions(section));
           break;
         case 'trending':
           widgets.add(_buildTrendingSection(section));
@@ -164,6 +217,18 @@ class _HomeScreenState extends State<HomeScreen> {
         case 'topRated':
           widgets.add(_buildTopRatedSection(section));
           break;
+        case 'liveEvents':
+          widgets.add(_buildLiveEventsSection(section));
+          break;
+        case 'friendsActivity':
+          widgets.add(_buildFriendsActivity(section));
+          break;
+        case 'deals':
+          widgets.add(_buildDealsSection(section));
+          break;
+        case 'news':
+          widgets.add(_buildNewsSection(section));
+          break;
       }
     }
 
@@ -173,8 +238,12 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildHeader(Map<String, dynamic> config) {
     final title = config['title'] as String? ?? 'Welcome';
     final subtitle = config['subtitle'] as String? ?? '';
-    final gradientHex = config['gradient'] as List<dynamic>? ?? ['#1a1a2e', '#16213e'];
-    
+    final gradientHex =
+        config['gradient'] as List<dynamic>? ?? ['#1a1a2e', '#16213e'];
+    final userPoints = config['userPoints'] as int? ?? 0;
+    final level = config['level'] as int? ?? 1;
+    final avatar = config['avatar'] as String?;
+
     final gradientColors = gradientHex
         .map((hex) => _hexToColor(hex as String))
         .toList();
@@ -183,7 +252,178 @@ class _HomeScreenState extends State<HomeScreen> {
       title: title,
       subtitle: subtitle,
       gradientColors: gradientColors,
+      userPoints: userPoints,
+      level: level,
+      avatar: avatar,
+      onProfileTap: () {
+        // Handle profile tap
+        _handleAction('profile');
+      },
     );
+  }
+
+  Widget _buildQuickActions(Map<String, dynamic> config) {
+    final actions = config['actions'] as List<dynamic>? ?? [];
+    return QuickActionsSection(
+      actions: actions,
+      onActionPressed: (actionId) {
+        _handleAction(actionId);
+      },
+    );
+  }
+
+  Widget _buildLiveEventsSection(Map<String, dynamic> config) {
+    final title = config['title'] as String? ?? '🎯 Live Events';
+    final events = config['events'] as List<dynamic>? ?? [];
+
+    return LiveEventsSection(
+      title: title,
+      events: events,
+      onEventTap: (eventId) {
+        _handleAction('view_event', data: {'eventId': eventId});
+      },
+    );
+  }
+
+  Widget _buildFriendsActivity(Map<String, dynamic> config) {
+    final title = config['title'] as String? ?? '👥 Friends Activity';
+    final activities = config['activities'] as List<dynamic>? ?? [];
+
+    return FriendsActivitySection(
+      title: title,
+      activities: activities,
+      onActivityTap: (userId) {
+        _handleAction('view_friend_profile', data: {'userId': userId});
+      },
+    );
+  }
+
+  Widget _buildDealsSection(Map<String, dynamic> config) {
+    final title = config['title'] as String? ?? '🔥 Hot Deals';
+    final deals = config['deals'] as List<dynamic>? ?? [];
+
+    return DealsSection(
+      title: title,
+      deals: deals,
+      onDealTap: (dealId) {
+        _handleAction('view_deal', data: {'dealId': dealId});
+      },
+    );
+  }
+
+  Widget _buildNewsSection(Map<String, dynamic> config) {
+    final title = config['title'] as String? ?? '📰 Latest News';
+    final newsItems = config['items'] as List<dynamic>? ?? [];
+
+    return NewsSection(
+      title: title,
+      items: newsItems,
+      onNewsTap: (newsId) {
+        _handleAction('view_news', data: {'newsId': newsId});
+      },
+    );
+  }
+
+  Future<void> _handleAction(
+    String actionId, {
+    Map<String, dynamic>? data,
+  }) async {
+    // Show loading indicator
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+
+    try {
+      switch (actionId) {
+        case 'play_now':
+          // Handle play now action
+          scaffoldMessenger.showSnackBar(
+            const SnackBar(content: Text('Launching game...')),
+          );
+          break;
+
+        case 'store':
+          // Navigate to store
+          scaffoldMessenger.showSnackBar(
+            const SnackBar(content: Text('Opening store...')),
+          );
+          break;
+
+        case 'friends':
+          // Show friends list
+          scaffoldMessenger.showSnackBar(
+            const SnackBar(content: Text('Showing friends list...')),
+          );
+          break;
+
+        case 'profile':
+          // Show profile
+          scaffoldMessenger.showSnackBar(
+            const SnackBar(content: Text('Opening profile...')),
+          );
+          break;
+
+        case 'view_event':
+          final eventId = data?['eventId'];
+          if (eventId != null) {
+            // Navigate to event details
+            scaffoldMessenger.showSnackBar(
+              SnackBar(content: Text('Viewing event: $eventId')),
+            );
+          }
+          break;
+
+        case 'view_friend_profile':
+          final userId = data?['userId'];
+          if (userId != null) {
+            // Navigate to friend's profile
+            scaffoldMessenger.showSnackBar(
+              SnackBar(content: Text('Viewing friend profile: $userId')),
+            );
+          }
+          break;
+
+        case 'view_deal':
+          final dealId = data?['dealId'];
+          if (dealId != null) {
+            // Navigate to deal details
+            scaffoldMessenger.showSnackBar(
+              SnackBar(content: Text('Viewing deal: $dealId')),
+            );
+          }
+          break;
+
+        case 'view_news':
+          final newsId = data?['newsId'];
+          if (newsId != null) {
+            // Navigate to news details
+            scaffoldMessenger.showSnackBar(
+              SnackBar(content: Text('Viewing news: $newsId')),
+            );
+          }
+          break;
+
+        case 'view_all_news':
+          // Navigate to all news screen
+          scaffoldMessenger.showSnackBar(
+            const SnackBar(content: Text('Viewing all news')),
+          );
+          break;
+
+        default:
+          // Handle other actions
+          debugPrint('Unhandled action: $actionId');
+          break;
+      }
+
+      // Log the action to the server
+      await _sduiService.handleAction(actionId: actionId, data: data);
+    } catch (e) {
+      debugPrint('Error handling action $actionId: $e');
+      if (mounted) {
+        scaffoldMessenger.showSnackBar(
+          SnackBar(content: Text('Error: ${e.toString()}')),
+        );
+      }
+    }
   }
 
   Widget _buildTrendingSection(Map<String, dynamic> config) {

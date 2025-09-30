@@ -57,7 +57,7 @@ sdui/
 
 3. **Optional: Run Mock Server** (for testing real HTTP requests)
    ```bash
-   dart server/fixed_server.dart
+   dart server/server.dart
    ```
    Then update `SDUIService` to use `http://localhost:8080/api`
 

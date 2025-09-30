@@ -6,7 +6,39 @@
         "type": "header",
         "title": "Welcome Back, Gamer!",
         "subtitle": "Ready for your next adventure?",
-        "gradient": ["#1a1a2e", "#16213e"]
+        "gradient": ["#1a1a2e", "#16213e"],
+        "userPoints": 1250,
+        "level": 15,
+        "avatar": "https://i.pravatar.cc/150?img=32"
+      },
+      {
+        "type": "quickActions",
+        "actions": [
+          {
+            "id": "play_now",
+            "title": "Play Now",
+            "icon": "play_arrow",
+            "color": "#FF6B6B"
+          },
+          {
+            "id": "store",
+            "title": "Store",
+            "icon": "shopping_cart",
+            "color": "#4ECDC4"
+          },
+          {
+            "id": "friends",
+            "title": "Friends",
+            "icon": "people",
+            "color": "#FFE66D"
+          },
+          {
+            "id": "profile",
+            "title": "Profile",
+            "icon": "person",
+            "color": "#A8DADC"
+          }
+        ]
       },
       {
         "type": "trending",
@@ -92,6 +124,115 @@
             "genre": "MOBA",
             "rating": 4.8,
             "downloads": "8M+"
+          }
+        ]
+      },
+      {
+        "type": "liveEvents",
+        "title": "🎯 Live Events",
+        "events": [
+          {
+            "id": "event1",
+            "title": "Weekly Tournament",
+            "description": "Join now for a chance to win 1000 coins!",
+            "timeLeft": "2h 30m",
+            "participants": 245,
+            "image": "https://picsum.photos/300/200?random=1"
+          },
+          {
+            "id": "event2",
+            "title": "New Game Launch",
+            "description": "Be among the first to play Cyber Legends 2.0",
+            "timeLeft": "1d 4h",
+            "participants": 1200,
+            "image": "https://picsum.photos/300/200?random=2"
+          },
+          {
+            "id": "event3",
+            "title": "Double XP Weekend",
+            "description": "Earn double XP on all games!",
+            "timeLeft": "3d",
+            "participants": 0,
+            "image": "https://picsum.photos/300/200?random=3"
+          }
+        ]
+      },
+      {
+        "type": "friendsActivity",
+        "title": "👥 Friends Activity",
+        "activities": [
+          {
+            "userId": "user1",
+            "username": "GamerPro99",
+            "action": "just earned the 'Legendary' achievement in Cyber Legends",
+            "timeAgo": "5m ago",
+            "avatar": "https://i.pravatar.cc/150?img=1"
+          },
+          {
+            "userId": "user2",
+            "username": "SpaceExplorer",
+            "action": "is now playing Space Warriors",
+            "timeAgo": "12m ago",
+            "avatar": "https://i.pravatar.cc/150?img=2",
+            "game": {
+              "id": "2",
+              "title": "Space Warriors",
+              "genre": "Strategy"
+            }
+          },
+          {
+            "userId": "user3",
+            "username": "MysticGamer",
+            "action": "completed level 25 in Mystic Quest",
+            "timeAgo": "1h ago",
+            "avatar": "https://i.pravatar.cc/150?img=3"
+          }
+        ]
+      },
+      {
+        "type": "deals",
+        "title": "🔥 Hot Deals",
+        "deals": [
+          {
+            "id": "deal1",
+            "title": "50% Off All Games",
+            "description": "Limited time offer. Use code: GAMING50",
+            "validUntil": "2023-12-31T23:59:59Z",
+            "banner": "https://picsum.photos/600/200?random=4"
+          },
+          {
+            "id": "deal2",
+            "title": "Starter Pack",
+            "description": "Get 1000 coins + exclusive items for $4.99",
+            "validUntil": "2023-11-30T23:59:59Z",
+            "banner": "https://picsum.photos/600/200?random=5"
+          }
+        ]
+      },
+      {
+        "type": "news",
+        "title": "📰 Latest News",
+        "items": [
+          {
+            "id": "news1",
+            "title": "New Update: Winter Wonderland",
+            "summary": "Explore the new winter map and collect limited-time rewards!",
+            "date": "2023-12-01",
+            "image": "https://picsum.photos/300/200?random=6"
+          },
+          {
+            "id": "news2",
+            "title": "Community Contest Winners",
+            "summary": "Check out the amazing fan art from our community contest.",
+            "date": "2023-11-28",
+            "image": "https://picsum.photos/300/200?random=7"
+          },
+          {
+            "id": "news3",
+            "title": "Developer Q&A",
+            "summary": "Our team answers your top questions about upcoming features.",
+            "date": "2023-11-25",
+            "image": "https://picsum.photos/300/200?random=8"
           }
         ]
       }

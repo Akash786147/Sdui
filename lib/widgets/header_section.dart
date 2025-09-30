@@ -6,12 +6,20 @@ class HeaderSection extends StatelessWidget {
   final String title;
   final String subtitle;
   final List<Color> gradientColors;
+  final int userPoints;
+  final int level;
+  final String? avatar;
+  final VoidCallback? onProfileTap;
 
   const HeaderSection({
     super.key,
     required this.title,
     required this.subtitle,
     required this.gradientColors,
+    this.userPoints = 0,
+    this.level = 1,
+    this.avatar,
+    this.onProfileTap,
   });
 
   @override
@@ -31,6 +39,77 @@ class HeaderSection extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              // User profile section
+              // GestureDetector(
+              //   onTap: onProfileTap,
+              //   child: Container(
+              //     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              //     decoration: BoxDecoration(
+              //       color: Colors.white.withOpacity(0.1),
+              //       borderRadius: BorderRadius.circular(20),
+              //       border: Border.all(color: Colors.white.withOpacity(0.2)),
+              //     ),
+              //     // child: Row(
+              //     //   children: [
+              //     //     // Avatar
+              //     //     // Container(
+              //     //     //   width: 40,
+              //     //     //   height: 40,
+              //     //     //   decoration: BoxDecoration(
+              //     //     //     shape: BoxShape.circle,
+              //     //     //     image: avatar != null
+              //     //     //         ? DecorationImage(
+              //     //     //             image: NetworkImage(avatar!), 
+              //     //     //             fit: BoxFit.cover,
+              //     //     //           )
+              //     //     //         : const DecorationImage(
+              //     //     //             image: AssetImage('assets/default_avatar.png'),
+              //     //     //             fit: BoxFit.cover,
+              //     //     //           ),
+              //     //     //   ),
+              //     //     // ),
+                      
+              //     //     const SizedBox(width: 10),
+              //     //     // User info
+              //     //     // Column(
+              //     //     //   crossAxisAlignment: CrossAxisAlignment.start,
+              //     //     //   children: [
+              //     //     //     // Level badge
+              //     //     //     Container(
+              //     //     //       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+              //     //     //       decoration: BoxDecoration(
+              //     //     //         color: Colors.amber[700],
+              //     //     //         borderRadius: BorderRadius.circular(10),
+              //     //     //       ),
+              //     //     //       child: Text(
+              //     //     //         'Lv. $level',
+              //     //     //         style: const TextStyle(
+              //     //     //           color: Colors.white,
+              //     //     //           fontSize: 10,
+              //     //     //           fontWeight: FontWeight.bold,
+              //     //     //         ),
+              //     //     //       ),
+              //     //     //     ),
+              //     //     //     const SizedBox(height: 2),
+              //     //     //     // Points
+              //     //     //     Text(
+              //     //     //       '$userPoints XP',
+              //     //     //       style: const TextStyle(
+              //     //     //         color: Colors.white,
+              //     //     //         fontSize: 12,
+              //     //     //         fontWeight: FontWeight.w500,
+              //     //     //       ),
+              //     //     //     ),
+              //     //     //   ],
+              //     //     // ),
+                    
+              //     //   ],
+              //     // ),
+                
+              //   ),
+              // ),
+              
+              // // Title and subtitle
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
