@@ -57,9 +57,11 @@ sdui/
 
 3. **Optional: Run Mock Server** (for testing real HTTP requests)
    ```bash
-   dart server/server.dart
+   dart server/fixed_server.dart
    ```
    Then update `SDUIService` to use `http://localhost:8080/api`
+
+  ## for using it on real devices either convert the server code to node js or use services like port forwarding or ngrok
 
 ## 🎨 How SDUI Works in This App
 
