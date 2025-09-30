@@ -1,7 +1,4 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
 
 /// Service to fetch SDUI configurations from the server
@@ -10,7 +7,6 @@ class SDUIService {
   // In production, this would be your actual API URL
   static const String baseUrl = 'https://12cb4e70d381.ngrok-free.app/api';
   final Dio _dio = Dio();
-  final http.Client _httpClient = http.Client();
 
   /// Fetches the home screen UI configuration
   Future<Map<String, dynamic>> fetchHomeScreen() async {
@@ -18,12 +14,10 @@ class SDUIService {
       // For development, we'll use local JSON
       // In production, uncomment the HTTP call
 
-      final response = await _httpClient.get(
-        Uri.parse('$baseUrl/home_screen.json'),
-      );
+      final response = await _dio.get('$baseUrl/home_screen.json');
       if (response.statusCode == 200) {
-        debugPrint("${response.body}-----------------");
-        return json.decode(response.body);
+        debugPrint("${response.data}-----------------");
+        return response.data;
       }
 
       // For now, return mock data directly
@@ -51,7 +45,7 @@ class SDUIService {
 
   // Add this method to properly close the http client
   void dispose() {
-    _httpClient.close();
+    _dio.close();
   }
 
   /// Mock home screen data
