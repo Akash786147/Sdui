@@ -1,0 +1,99 @@
+{
+    "screenType": "home",
+    "title": "Gaming Hub",
+    "sections": [
+      {
+        "type": "header",
+        "title": "Welcome Back, Gamer!",
+        "subtitle": "Ready for your next adventure?",
+        "gradient": ["#1a1a2e", "#16213e"]
+      },
+      {
+        "type": "trending",
+        "title": "🔥 Trending Games",
+        "games": [
+          {
+            "id": "1",
+            "title": "Cyber Legends",
+            "genre": "Action RPG",
+            "rating": 4.8,
+            "players": "2.5M+",
+            "color": "#FF6B6B"
+          },
+          {
+            "id": "2",
+            "title": "Space Warriors",
+            "genre": "Strategy",
+            "rating": 4.6,
+            "players": "1.8M+",
+            "color": "#4ECDC4"
+          },
+          {
+            "id": "3",
+            "title": "Mystic Quest",
+            "genre": "Adventure",
+            "rating": 4.9,
+            "players": "3.2M+",
+            "color": "#FFE66D"
+          }
+        ]
+      },
+      {
+        "type": "categories",
+        "title": "🎮 Categories",
+        "items": [
+          {
+            "name": "Action",
+            "icon": "sports_esports",
+            "color": "#FF6B6B",
+            "count": "100+"
+          },
+          {
+            "name": "Adventure",
+            "icon": "explore",
+            "color": "#4ECDC4",
+            "count": "120+"
+          },
+          {
+            "name": "Strategy",
+            "icon": "psychology",
+            "color": "#FFE66D",
+            "count": "90+"
+          },
+          {
+            "name": "Puzzle",
+            "icon": "extension",
+            "color": "#A8DADC",
+            "count": "200+"
+          }
+        ]
+      },
+      {
+        "type": "topRated",
+        "title": "⭐ Top Rated",
+        "games": [
+          {
+            "id": "4",
+            "title": "Dragon's Fury",
+            "genre": "RPG",
+            "rating": 4.9,
+            "downloads": "5M+"
+          },
+          {
+            "id": "5",
+            "title": "Neon Racer",
+            "genre": "Racing",
+            "rating": 4.7,
+            "downloads": "3M+"
+          },
+          {
+            "id": "6",
+            "title": "Battle Arena",
+            "genre": "MOBA",
+            "rating": 4.8,
+            "downloads": "8M+"
+          }
+        ]
+      }
+    ]
+  }
